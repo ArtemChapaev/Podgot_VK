@@ -1,5 +1,14 @@
 #include "utils.h"
 
+int strtol_with_checking_err(const char* str) {
+    char* end = NULL;
+    int num = strtol(str, &end, 0);
+    if (*end != '\0') {
+	exit(ERR_WRONG_ARG);
+    }
+    return num;
+}
+
 size_t timer_from(unsigned int from) {
     size_t counter = 0;
     for (int i = from; i >= 0; --i) {

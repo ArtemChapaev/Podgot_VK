@@ -1,7 +1,18 @@
-#include "utils.h"
+#include "some.h"
+
+int strtol_with_checking_err(const char* str);
+
+size_t timer_from(unsigned int from);
+
+int custom_pow(int base, int power);
+
+int prime_number_validation(int num);
+
+void numbers_to_one(int num, int output_num);
 
 #define ERR_ARGS_COUNT (-1)
 #define ERR_WRONG_FLG (-2)
+#define ERR_WRONG_ARG (-3)
 
 #define TST_FOO_FIX     1
 #define TST_FOO_IMPL    2
@@ -28,21 +39,21 @@ int main(int argc, const char** argv) {
         return ERR_ARGS_COUNT;
     }
 
-    int Test_case = atoi(argv[1]);
+    int Test_case = strtol_with_checking_err(argv[1]);
     const char* data;
     data = argv[2];
 
     switch (Test_case) {
         case TST_FOO_FIX: {
-            int to = atoi(data);
+            int to = strtol_with_checking_err(data);
             size_t ticks_count = timer_from(to);
             printf("%zu\n", ticks_count);
             break;
         }
         case TST_FOO_IMPL: {
             if (argc == 4) {
-                int base = atoi(data);
-                int pow =  atoi(argv[3]);
+                int base = strtol_with_checking_err(data);
+                int pow =  strtol_with_checking_err(argv[3]);
                 int res = custom_pow(base, pow);
                 printf("%d\n", res);
             } else {
@@ -51,13 +62,13 @@ int main(int argc, const char** argv) {
       	    break;
         }
         case TST_MOD_IMPL: {
-            int num = atoi(data);
+            int num = strtol_with_checking_err(data);
 	    int res = prime_number_validation(num);
 	    printf("%d\n", res);
 	    break;
         }
 	case TST_MOD_CREAT: {
-	    int num = atoi(data);
+	    int num = strtol_with_checking_err(data);
             numbers_to_one(num, 1);  // Вызов функции рекурсивного вывода чисел от 1 до num
 	    break;
 	}

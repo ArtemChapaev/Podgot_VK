@@ -1,4 +1,5 @@
-#include "recursion.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void numbers_to_one(int num, int output_num) {
     if (output_num == num) {

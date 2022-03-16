@@ -1,12 +1,13 @@
-#include "utils.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-int strtol_with_checking_err(const char* str) {
+int strtol_with_checking_err(const char* str, int* num) {
     char* end = NULL;
-    int num = strtol(str, &end, 0);
+    *num = strtol(str, &end, 0);
     if (*end != '\0') {
-	exit(ERR_WRONG_ARG);
+	return 1;
     }
-    return num;
+    return 0;
 }
 
 size_t timer_from(unsigned int from) {

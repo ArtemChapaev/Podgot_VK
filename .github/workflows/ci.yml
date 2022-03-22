@@ -37,3 +37,120 @@ jobs:
         if: failure()
         with:
           path: valgrind.log
+
+  # For full_test.c
+
+  check_ftest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check_ftest
+  build_ftest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [check_ftest]
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build_ftest
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: full_test.out
+  test_ftest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [build_ftest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test_ftest
+  memtest_ftest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [test_ftest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make memtest_ftest
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: valgrind.log
+
+  # For read_test.c
+
+  check_rtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check_rtest
+  build_rtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [check_rtest]
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build_rtest
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: read_test.out
+  test_rtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [build_rtest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test_rtest
+  memtest_rtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [test_rtest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make memtest_rtest
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: valgrind.log
+
+  # For write_test.c
+
+  check_wtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check_wtest
+  build_wtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [check_wtest]
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build_wtest
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: write_test.out
+  test_wtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [build_wtest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test_wtest
+  memtest_wtest:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [test_wtest]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make memtest_wtest
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: valgrind.log

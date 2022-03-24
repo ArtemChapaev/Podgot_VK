@@ -2,6 +2,7 @@
 #define PROJECT_INCLUDE_CREDENTIALS_RECORDING_H_
 
 #include <stdio.h>
+
 #include "utils.h"
 
 void write_credentials(FILE *const p_record_file);

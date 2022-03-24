@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/utils.h"
+
+#include "utils.h"
+#include "utils_for_functions.h"
 
 void invocation_enter_credentials();
 
@@ -36,7 +38,7 @@ void invocation_enter_credentials() {
 int enter_credentials(data_t *client_data) {
     int return_code = scanf("%d", &client_data->number);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     char format_person[FORMAT_STRING_MAX_SIZE];
@@ -44,12 +46,12 @@ int enter_credentials(data_t *client_data) {
 
     return_code = scanf(format_person, client_data->name);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     return_code = scanf(format_person, client_data->surname);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     char format_address[FORMAT_STRING_MAX_SIZE];
@@ -57,7 +59,7 @@ int enter_credentials(data_t *client_data) {
 
     return_code = scanf(format_address, client_data->address);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     char format_tel_num[FORMAT_STRING_MAX_SIZE];
@@ -65,31 +67,31 @@ int enter_credentials(data_t *client_data) {
 
     return_code = scanf(format_tel_num, client_data->tel_number);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     return_code = scanf("%lf", &client_data->indebtedness);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     return_code = scanf("%lf", &client_data->credit_limit);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     return_code = scanf("%lf", &client_data->cash_payments);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     } else {
         return 0;
     }
 }
 
 int write_to_file_credentials(FILE *const p_credentials_file, data_t client_data) {
-    int return_code = fprintf(p_credentials_file, "%-12d%-*s%-*s%-*s%*s%12.2f%12.2f%12.2f\n",
-                              client_data.number, PERSON - 9, client_data.name, PERSON - 9,
-                              client_data.surname, ADDRESS - 14, client_data.address, PHONE + 5,
+    int return_code = fprintf(p_credentials_file, OUTPUT_CRED_FORMAT,
+                              client_data.number, PERSON_FORMAT, client_data.name, PERSON_FORMAT,
+                              client_data.surname, ADDRESS_FORMAT, client_data.address, PHONE_FORMAT,
                               client_data.tel_number, client_data.indebtedness,
                               client_data.credit_limit, client_data.cash_payments);
     return return_code;

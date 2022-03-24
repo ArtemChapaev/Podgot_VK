@@ -1,8 +1,16 @@
 #ifndef PROJECT_INCLUDE_UTILS_H_
 #define PROJECT_INCLUDE_UTILS_H_
 
+#define RECORD_FILE "record.dat"
+#define TRANSACTION_FILE "transaction.dat"
+#define BASE_UPD_FILE "blackrecord.dat"
+
+#define MESS_NO_FILE_OPENED "Not access to %s\n"
+#define MESS_NO_3_FILES_OPENED "Not access to %s, %s, %s\n"
+#define MESS_WRONG_CHOICE "Error, invalid choice\n"
+
 enum data {
-    PHONE = 15, PERSON = 20, ADDRESS = 30, FORMAT_STRING_MAX_SIZE = 10
+    PHONE = 15, PERSON = 20, ADDRESS = 30
 };
 
 enum mods {
@@ -10,7 +18,7 @@ enum mods {
 };
 
 enum errors {
-    ERR_WRONG_CHOICE = -2, ERR_WRONG_FILE = -1
+    ERR_WRONG_CHOICE = -2, ERR_NO_FILE_OPENED = -1, ERR_WRONG_INPUT = 1
 };
 
 struct master_record_t {

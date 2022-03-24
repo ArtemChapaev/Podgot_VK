@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "utils.h"
+#include "utils_for_functions.h"
 
 void invocation_enter_transaction();
 
@@ -30,18 +32,18 @@ void invocation_enter_transaction() {
 int enter_transaction(data_t *transfer) {
     int return_code = scanf("%d", &transfer->number);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     }
 
     return_code = scanf("%lf", &transfer->cash_payments);
     if (return_code != 1) {
-        return 1;
+        return ERR_WRONG_INPUT;
     } else {
         return 0;
     }
 }
 
 void write_to_file_transaction(FILE *const p_transaction_file, data_t transfer) {
-    fprintf(p_transaction_file, "%-3d%-6.2f\n",
+    fprintf(p_transaction_file, OUTPUT_TRANS_FORMAT,
             transfer.number, transfer.cash_payments);
 }

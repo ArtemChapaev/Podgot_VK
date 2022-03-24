@@ -80,10 +80,10 @@ check_rtest:
 	./run_linters.sh
 
 test_rtest: $(TARGET_READ_TEST)
-	./btests/run_read_test.sh $(TARGET_READ_TEST)
+	./btests/run_unit_test.sh $(TARGET_READ_TEST) --read
 
 memtest_rtest: $(TARGET_READ_TEST)
-	./btests/run_read_test.sh $(TARGET_READ_TEST) --memcheck
+	./btests/run_unit_test.sh $(TARGET_READ_TEST) --read --memcheck
 
 clean_rtest:
 	rm -rf $(TARGET_READ_TEST) *.dat
@@ -107,10 +107,10 @@ check_wtest:
 	./run_linters.sh
 
 test_wtest: $(TARGET_WRITE_TEST)
-	./btests/run_write_test.sh $(TARGET_WRITE_TEST)
+	./btests/run_unit_test.sh $(TARGET_WRITE_TEST) --write
 
 memtest_wtest: $(TARGET_WRITE_TEST)
-	./btests/run_write_test.sh $(TARGET_WRITE_TEST) --memcheck
+	./btests/run_unit_test.sh $(TARGET_WRITE_TEST) --write --memcheck
 
 clean_wtest:
 	rm -rf $(TARGET_WRITE_TEST) *.dat

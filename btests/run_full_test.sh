@@ -30,7 +30,7 @@ rm -f $TEST_F_NAME
 touch $TEST_F_NAME
 
 if [[ ${2} == ${CHECK_MEM_ARG} ]]; then
-	check_mem "${IN}"
+	check_mem ""
 else
 	eval "${PROG_PATH}"
 fi

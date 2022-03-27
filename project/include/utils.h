@@ -1,10 +1,8 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef PROJECT_INCLUDE_UTILS_H_
+#define PROJECT_INCLUDE_UTILS_H_
 
+int strtol_with_checking_err(const char *str, int *num);
+int timer_from(unsigned int from);
+int custom_pow(int base, int power);
 
-size_t timer_from(unsigned char from);
-// TODO: Implement `power of` function
-// int custom_pow(int base, int power);
-
-#endif //UTILS_H
-
+#endif  // PROJECT_INCLUDE_UTILS_H_

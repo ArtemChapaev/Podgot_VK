@@ -6,7 +6,7 @@ SRCS = \
        project/src/main.c \
        project/src/utils.c \
        project/src/prime_number.c \
-       project/src/recursion.c
+       project/src/numbers_to_one.c
 
 .PHONY: all build rebuild check test clean
 

@@ -1,37 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int strtol_with_checking_err(const char* str, int* num) {
-    char* end = NULL;
+int strtol_with_checking_err(const char *str, int *num) {
+    char *end = NULL;
     *num = strtol(str, &end, 0);
     if (*end != '\0') {
-	return 1;
+        return 1;
     }
     return 0;
 }
 
 size_t timer_from(unsigned int from) {
-    size_t counter = 0;
-    for (int i = from; i >= 0; --i) {
-        ++counter;
+    int i;
+    for (i = from; i >= 0; --i) {
         printf("%d", i);
         if (i != 0) {
             putchar(' ');
-        } else {
-	    putchar('\n');
         }
     }
-    return counter;
+
+    if (i == -1) {
+        putchar('\n');
+        return ++from;
+    } else {
+        return 0;
+    }
 }
 
 int custom_pow(int base, int power) {
     if (base == 1)
-	return base;
+        return base;
 
     int result = 1;
-    while (power != 0) {
-	result *= base;
-	power--;
+    for (; power != 0; --power) {
+        result *= base;
     }
     return result;
 }

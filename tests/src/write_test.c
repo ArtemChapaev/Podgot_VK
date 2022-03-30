@@ -1,26 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "utils_for_tests.h"
-#include "utils.h"
+#include "data_and_recording.h"
+#include "tests.h"
 #include "credentials_recording.h"
 
-int test_write_file();
-
-int main() {
-    int return_code = test_write_file();
-
-    if (return_code != 0) {
-        printf(ERROR_MESSAGE);
-    } else {
-        printf(CORRECT_END_MESSAGE);
-    }
-
-    return return_code;
-}
-
 int test_write_file() {
+    printf("Testing write_test\n");
+
     // пункт 1: запись в файл
     data_t expected_data = {
             111, "Name_11", "Surname_11", "Moscow",

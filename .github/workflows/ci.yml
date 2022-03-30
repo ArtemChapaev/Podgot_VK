@@ -40,38 +40,16 @@ jobs:
 
   # For Tests
 
-  check_test:
-    runs-on: ubuntu-latest
-    container: leshiy1295/gcc_linters_valgrind
-    steps:
-      - uses: actions/checkout@v2
-      - run: make check_ftest
-      - run: make check_rtest
-      - run: make check_wtest
-
   build_test:
     runs-on: ubuntu-latest
     container: leshiy1295/gcc_linters_valgrind
-    needs: [check_test]
     steps:
     - uses: actions/checkout@v2
-    - run: make build_ftest
+    - run: make build_test
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: full_test.out
-
-    - run: make build_rtest
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: read_test.out
-
-    - run: make build_wtest
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: write_test.out
+        path: tests.out
 
   test_test:
     runs-on: ubuntu-latest
@@ -79,33 +57,4 @@ jobs:
     needs: [build_test]
     steps:
       - uses: actions/checkout@v2
-      - run: make test_ftest
-      - run: make test_rtest
-      - run: make test_wtest
-
-  memtest_test:
-    runs-on: ubuntu-latest
-    container: leshiy1295/gcc_linters_valgrind
-    needs: [test_test]
-    steps:
-      - uses: actions/checkout@v2
-      - run: make memtest_ftest
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          path: valgrind.log
-
-      - run: make memtest_rtest
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          path: valgrind.log
-
-      - run: make memtest_wtest
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          path: valgrind.log
+      - run: make test_test

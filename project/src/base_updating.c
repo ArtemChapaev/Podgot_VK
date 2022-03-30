@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "utils.h"
-#include "utils_for_functions.h"
+#include "data_and_recording.h"
+#include "formats_for_output.h"
 
 int read_credentials_from_file(FILE *const p_credentials_file, data_t *client_data);
 

@@ -1,26 +1,13 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils_for_tests.h"
-#include "utils.h"
+#include "data_and_recording.h"
+#include "tests.h"
 #include "base_updating.h"
 
-int test_read_file();
-
-int main() {
-    int return_code = test_read_file();
-
-    if (return_code != 0) {
-        printf(ERROR_MESSAGE);
-    } else {
-        printf(CORRECT_END_MESSAGE);
-    }
-
-    return return_code;
-}
-
 int test_read_file() {
+    printf("Testing read_test\n");
+
     // пункт 1: чтение данных из файла
     data_t got_data;
     FILE *p_read_file = fopen(UNIT_TEST_FILE, "r");
@@ -43,5 +30,4 @@ int test_read_file() {
         return ERR_WRONG_COMPARING;
     }
     return 0;
-
 }

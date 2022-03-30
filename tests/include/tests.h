@@ -7,6 +7,12 @@
 #define ERROR_MESSAGE "ERROR!\n"
 #define CORRECT_END_MESSAGE "Correct ending\n"
 
+typedef int (*unit_test)();
+
+int full_test_file();
+int test_read_file();
+int test_write_file();
+
 enum test_errors {
     ERR_WRONG_READING = 2, ERR_WRONG_COMPARING = 3, ERR_WRONG_READING_FROM_FILE = 4,
     ERR_WRONG_TEST = 6

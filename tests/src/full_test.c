@@ -2,26 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils_for_tests.h"
-#include "utils.h"
+#include "data_and_recording.h"
+#include "tests.h"
 #include "base_updating.h"
 #include "credentials_recording.h"
 
-int test_write_to_file();
+int full_test_file() {
+    printf("Testing full_test\n");
 
-int main() {
-    int return_code = test_write_to_file();
-
-    if (return_code != 0) {
-        printf(ERROR_MESSAGE);
-        return ERR_WRONG_TEST;
-    }
-
-    printf(CORRECT_END_MESSAGE);
-    return 0;
-}
-
-int test_write_to_file() {
     // пункт 1: запись в файл
     data_t expected_data = {
             111, "Name_11", "Surname_11", "Moscow",

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "utils.h"
+#include "data_and_recording.h"
 
 void update_base(FILE *const p_credentials_file, FILE *const p_transaction_file,
                  FILE *const p_update_base_file);

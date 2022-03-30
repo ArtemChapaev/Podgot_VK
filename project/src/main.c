@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "utils.h"
+#include "data_and_recording.h"
 #include "credentials_recording.h"
 #include "transaction_recording.h"
 #include "base_updating.h"
-#include "helper.h"
-
+#include "invocation_choice.h"
 
 int main(void) {
     invocation_choice();

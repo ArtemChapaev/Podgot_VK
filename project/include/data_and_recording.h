@@ -1,5 +1,5 @@
-#ifndef PROJECT_INCLUDE_UTILS_H_
-#define PROJECT_INCLUDE_UTILS_H_
+#ifndef PROJECT_INCLUDE_DATA_AND_RECORDING_H_
+#define PROJECT_INCLUDE_DATA_AND_RECORDING_H_
 
 #define RECORD_FILE "record.dat"
 #define TRANSACTION_FILE "transaction.dat"
@@ -33,4 +33,4 @@ struct master_record_t {
 };
 typedef struct master_record_t data_t;
 
-#endif  // PROJECT_INCLUDE_UTILS_H_
+#endif  // PROJECT_INCLUDE_DATA_AND_RECORDING_H_

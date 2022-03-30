@@ -37,3 +37,24 @@ jobs:
         if: failure()
         with:
           path: valgrind.log
+
+  # For Tests
+
+  build_test:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build_test
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: tests.out
+
+  test_test:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters_valgrind
+    needs: [build_test]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test_test

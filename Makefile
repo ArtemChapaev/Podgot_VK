@@ -22,10 +22,9 @@ TST_SRCS = \
            project/tests/src/*.c \
            project/src/helper_for_matrix.c
 
-.PHONY: all check build test memtest testextra memtestextra rebuild clean
+.PHONY: all check build test memtest testextra memtestextra rebuild clean main_test
 
-all: clean check build test memtest testextra memtestextra
-
+all: clean check build test memtest testextra memtestextra main_test
 check:
 	./run_linters.sh
 
@@ -33,6 +32,8 @@ build: $(TARGET)
 
 test: $(TST_TARGET)
 	$(TST_TARGET)
+
+main_test: $(TARGET)
 	$(TARGET)
 
 memtest: $(TST_TARGET)

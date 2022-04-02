@@ -16,7 +16,7 @@
 #define RESULT_FILE "rsult.txt"
 
 
-typedef Matrix * (* matrix_arith_func)(const Matrix*, const Matrix*);
+typedef matrix_t * (* matrix_arith_func)(const matrix_t*, const matrix_t*);
 
 typedef struct TestCaseArith {
     const char* dir_name;
@@ -70,11 +70,11 @@ void test_matrix_arithmetic(const char *base_dir) {
 
 static void _test_arith(const char *left, const char *right, const char *result,
                         matrix_arith_func test_func) {
-    Matrix *left_matrix = create_matrix_from_file(left);
-    Matrix *right_matrix = create_matrix_from_file(right);
-    Matrix *expected_matrix = create_matrix_from_file(result);
+    matrix_t *left_matrix = create_matrix_from_file(left);
+    matrix_t *right_matrix = create_matrix_from_file(right);
+    matrix_t *expected_matrix = create_matrix_from_file(result);
 
-    Matrix *result_matrix = test_func(left_matrix, right_matrix);
+    matrix_t *result_matrix = test_func(left_matrix, right_matrix);
     assert_matrix_equal(expected_matrix, result_matrix, eps_base);
 
     free_matrix(left_matrix);

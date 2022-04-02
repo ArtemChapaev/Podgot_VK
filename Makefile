@@ -19,8 +19,8 @@ TST_HDRS = \
 
 TST_SRCS = \
            project/src/matrix.c \
-		   project/tests/src/*.c \
-		   project/src/helper_for_matrix.c
+           project/tests/src/*.c \
+           project/src/helper_for_matrix.c
 
 .PHONY: all check build test memtest testextra memtestextra rebuild clean
 
@@ -33,6 +33,7 @@ build: $(TARGET)
 
 test: $(TST_TARGET)
 	$(TST_TARGET)
+	$(TARGET)
 
 memtest: $(TST_TARGET)
 	./project/tests/memtest.sh ${TST_TARGET}

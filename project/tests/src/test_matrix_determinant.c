@@ -46,7 +46,7 @@ void test_matrix_determinant(const char *base_dir) {
 }
 
 void _test_determinant(const char *in, double expected_det, double eps) {
-    Matrix *matrix = create_matrix_from_file(in);
+    matrix_t *matrix = create_matrix_from_file(in);
 
     double result_det = 0.;
     int res = det(matrix, &result_det);

@@ -9,9 +9,9 @@
 
 char *path_join(const char *, ...);
 
-Matrix *create_identity_matrix(int);
-void print_matrix(const Matrix *);
-void assert_matrix_equal(Matrix *, Matrix *, double);
+matrix_t *create_identity_matrix(int);
+void print_matrix(const matrix_t *);
+void assert_matrix_equal(matrix_t *, matrix_t *, double);
 
 int double_equals(double, double, double);
 

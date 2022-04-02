@@ -43,14 +43,14 @@ void test_element_setting(const char *base_dir) {
 }
 
 static void _test_set_elem(const char *in) {
-    Matrix *src_matrix = create_matrix_from_file(in);
+    matrix_t *src_matrix = create_matrix_from_file(in);
 
     size_t rows = 0;
     size_t cols = 0;
     get_rows(src_matrix, &rows);
     get_cols(src_matrix, &cols);
 
-    Matrix *dst_matrix = create_matrix(rows, cols);
+    matrix_t *dst_matrix = create_matrix(rows, cols);
 
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {

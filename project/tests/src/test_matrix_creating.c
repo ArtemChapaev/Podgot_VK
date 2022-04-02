@@ -100,7 +100,7 @@ void test_matrix_creating(const char *base_dir) {
  * - Free matrix.
  */
 static void _test_create_from_file(const char *in, TestCase test_case) {
-    Matrix *matrix = create_matrix_from_file(in);
+    matrix_t *matrix = create_matrix_from_file(in);
     assert((matrix != NULL) && "Creating from file was failed");
 
     size_t rows = 0;

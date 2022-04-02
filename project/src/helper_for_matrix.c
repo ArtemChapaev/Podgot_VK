@@ -5,56 +5,63 @@
 #include "matrix.h"
 
 
-Matrix* addition_matrix(const Matrix *l, const Matrix *r, const char operation) {
-    if (l == NULL || r == NULL) {
+double add(double a, double b) { return a + b; }
+
+double subtract(double a, double b) { return a - b; }
+
+void calculate_matrix(const matrix_t *new_matrix, const matrix_t *left_matrix, const matrix_t *right_matrix,
+                      double (*operation_func)(double, double)) {
+    for (size_t i = 0; i < new_matrix->rows; i++) {
+        for (size_t k = 0; k < new_matrix->cols; k++) {
+            size_t index = i * new_matrix->cols + k;
+            new_matrix->array[index] = operation_func(left_matrix->array[index], right_matrix->array[index]);
+        }
+    }
+}
+
+matrix_t *perform_addition_matrix(const matrix_t *left_matrix,
+                                  const matrix_t *right_matrix, const char operation) {
+    if (left_matrix == NULL || right_matrix == NULL) {
         return NULL;
     }
-    if (l->cols != r->cols || l->rows != r->rows) {
+    if (left_matrix->cols != right_matrix->cols || left_matrix->rows != right_matrix->rows) {
         return NULL;
     }
 
-    Matrix *new_matrix = create_matrix(l->rows, l->cols);
+    matrix_t *new_matrix = create_matrix(right_matrix->rows, right_matrix->cols);
     if (new_matrix == NULL) {
         return NULL;
     }
 
-    int err_code = 0;
-    // согласен, дальше копипаста, но я не знаю, как сделать это иначе
-    // но при этом делая проверку передаваемой константы 1 раз
-    if (operation == '+') {
-        for (size_t i = 0; i < new_matrix->rows; i++) {
-            for (size_t k = 0; k < new_matrix->cols; k++) {
-                size_t index = i * new_matrix->cols + k;
-                new_matrix->array[index] = l->array[index] + r->array[index];
-            }
-        }
-    } else if (operation == '-') {
-        for (size_t i = 0; i < new_matrix->rows; i++) {
-            for (size_t k = 0; k < new_matrix->cols; k++) {
-                size_t index = i * new_matrix->cols + k;
-                new_matrix->array[index] = l->array[index] - r->array[index];
-            }
-        }
-    } else {
-        err_code = ERR_WRONG_OPERATOR;
-    }
+    double (*operation_func)(double, double);
 
-    if (err_code != 0) {
-        free_matrix(new_matrix);
-        return NULL;
+    switch (operation) {
+        case ('+'): {
+            operation_func = add;
+            break;
+        }
+        case ('-'): {
+            operation_func = subtract;
+            break;
+        }
+        default: {
+            free_matrix(new_matrix);
+            return NULL;
+        }
     }
+    calculate_matrix(new_matrix, left_matrix, right_matrix, operation_func);
     return new_matrix;
 }
 
-double det_of_m(const Matrix *matrix, int *err) {
+double count_det(const matrix_t *matrix, int *err) {
     if (matrix->rows == 1) {
-        return matrix->array[0];    // я решил оставить return-ы в этих двух случаях,
-    }                               // т.к это проверки на выход из рекурсии
+        return matrix->array[0];
+    }
     if (matrix->rows == 2) {
         return matrix->array[0] * matrix->array[3] - matrix->array[1] * matrix->array[2];
     }
 
-    Matrix *part_of_matrix = create_matrix(matrix->cols - 1, matrix->rows - 1);
+    matrix_t *part_of_matrix = create_matrix(matrix->cols - 1, matrix->rows - 1);
     if (part_of_matrix == NULL) {
         *err = ERR_MEMORY;
         return 0.0;
@@ -66,9 +73,9 @@ double det_of_m(const Matrix *matrix, int *err) {
     for (size_t k = 0; k < matrix->cols; k++) {
         matrix_part_cpy(matrix, part_of_matrix, i, k);
         if ((i + k) % 2 == 0) {
-            val += matrix->array[i * matrix->cols + k] * det_of_m(part_of_matrix, err);
+            val += matrix->array[i * matrix->cols + k] * count_det(part_of_matrix, err);
         } else {
-            val -= matrix->array[i * matrix->cols + k] * det_of_m(part_of_matrix, err);
+            val -= matrix->array[i * matrix->cols + k] * count_det(part_of_matrix, err);
         }
     }
     free_matrix(part_of_matrix);
@@ -76,18 +83,23 @@ double det_of_m(const Matrix *matrix, int *err) {
     return val;
 }
 
-void matrix_part_cpy(const Matrix *matrix, Matrix *new_matrix, size_t row, size_t col) {
-    for (size_t i = 0, x1 = 0; i < matrix->rows; ++i, ++x1) {
+void matrix_part_cpy(const matrix_t *matrix, matrix_t *new_matrix, size_t row, size_t col) {
+    size_t x1 = 0;
+    for (size_t i = 0; i < matrix->rows; ++i) {
         if (i == row) {
             --x1;
         } else {
-            for (size_t k = 0, x2 = 0; k < matrix->cols; ++k, ++x2) {
+            size_t x2 = 0;
+
+            for (size_t k = 0; k < matrix->cols; ++k) {
                 if (k == col) {
                     --x2;
                 } else {
                     new_matrix->array[x1 * new_matrix->cols + x2] = matrix->array[i * matrix->cols + k];
                 }
+                ++x2;
             }
         }
+        ++x1;
     }
 }

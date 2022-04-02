@@ -14,8 +14,9 @@ enum errors {
     ERR_WRONG_OPERATOR
 };
 
-Matrix* addition_matrix(const Matrix *l, const Matrix *r, const char operation);
-double det_of_m(const Matrix *matrix, int *err);
-void matrix_part_cpy(const Matrix *matrix, Matrix *new_matrix, size_t row, size_t col);
+matrix_t *perform_addition_matrix(const matrix_t *left_matrix,
+                                  const matrix_t *right_matrix, const char operation);
+double count_det(const matrix_t *matrix, int *err);
+void matrix_part_cpy(const matrix_t *matrix, matrix_t *new_matrix, size_t row, size_t col);
 
 #endif  // PROJECT_INCLUDE_HELPER_FOR_MATRIX_H_

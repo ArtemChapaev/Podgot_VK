@@ -45,10 +45,10 @@ void test_matrix_adjugate(const char *base_dir) {
 }
 
 static void _test_adjugate(const char *in, const char *out) {
-    Matrix *in_matrix = create_matrix_from_file(in);
-    Matrix *expected_matrix = create_matrix_from_file(out);
+    matrix_t *in_matrix = create_matrix_from_file(in);
+    matrix_t *expected_matrix = create_matrix_from_file(out);
 
-    Matrix *adj_matrix = adj(in_matrix);
+    matrix_t *adj_matrix = adj(in_matrix);
    
     assert_matrix_equal(expected_matrix, adj_matrix, 1e-2);
 

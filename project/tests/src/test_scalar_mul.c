@@ -46,10 +46,10 @@ void test_scalar_mul(const char *base_dir) {
 }
 
 void _test_scalar_mul(const char *in, double factor, const char *out) {
-    Matrix *in_matrix = create_matrix_from_file(in);
-    Matrix *expected_matrix = create_matrix_from_file(out);
+    matrix_t *in_matrix = create_matrix_from_file(in);
+    matrix_t *expected_matrix = create_matrix_from_file(out);
 
-    Matrix *result_matrix = mul_scalar(in_matrix, factor);
+    matrix_t *result_matrix = mul_scalar(in_matrix, factor);
     assert_matrix_equal(expected_matrix, result_matrix, 0.3);
 
     free_matrix(in_matrix);

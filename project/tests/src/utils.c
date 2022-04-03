@@ -43,7 +43,7 @@ char *path_join(const char *dir, ...) {
     return result;
 }
 
-void print_matrix(const Matrix *matrix) {
+void print_matrix(const matrix_t *matrix) {
     size_t rows = 0;
     get_rows(matrix, &rows);
 
@@ -61,8 +61,8 @@ void print_matrix(const Matrix *matrix) {
     puts("");
 }
 
-Matrix *create_identity_matrix(int size) {
-    Matrix *matrix = create_matrix(size, size);
+matrix_t *create_identity_matrix(int size) {
+    matrix_t *matrix = create_matrix(size, size);
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -77,7 +77,7 @@ int double_equals(double left, double right, double eps) {
     return fabs(left - right) < eps;
 }
 
-void assert_matrix_equal(Matrix *expected, Matrix *received, double eps) {
+void assert_matrix_equal(matrix_t *expected, matrix_t *received, double eps) {
     size_t l_rows = 0;
     get_rows(expected, &l_rows);
     size_t r_rows = 0;

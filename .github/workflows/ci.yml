@@ -29,6 +29,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: tests.out
+      - uses: actions/checkout@v2
+      - run: make main_test
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: main.out
   memtest:
     runs-on: ubuntu-latest
     container: leshiy1295/gcc_linters_valgrind

@@ -43,13 +43,13 @@ void test_matrix_inverse(const char *base_dir) {
 }
 
 static void _test_inverse(const char *in) {
-    Matrix *matrix = create_matrix_from_file(in);
+    matrix_t *matrix = create_matrix_from_file(in);
     size_t size = 0;
     get_rows(matrix, &size);
-    Matrix *expected_identity_matrix = create_identity_matrix(size);
+    matrix_t *expected_identity_matrix = create_identity_matrix(size);
 
-    Matrix *inversed_matrix = inv(matrix);
-    Matrix *identity_matrix = mul(matrix, inversed_matrix);
+    matrix_t *inversed_matrix = inv(matrix);
+    matrix_t *identity_matrix = mul(matrix, inversed_matrix);
 
     assert_matrix_equal(expected_identity_matrix, identity_matrix, eps_base);
 

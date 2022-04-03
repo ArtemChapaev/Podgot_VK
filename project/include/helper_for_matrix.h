@@ -5,6 +5,11 @@
 
 #define ROW_FOR_DECOMP 0
 
+enum matrix {
+    ONE_ROW_MATRIX = 1,
+    TWO_ROW_MATRIX
+};
+
 
 enum errors {
     ERR_WRONG_POINTER = 1,

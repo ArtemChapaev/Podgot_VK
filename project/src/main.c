@@ -4,6 +4,7 @@
 
 int main(int argc, const char **argv) {
     if (argc != 2) {
+        printf("To little argc\n");
         return -1;
     }
 

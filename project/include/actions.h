@@ -1,13 +1,11 @@
-#ifndef PODGOT_VK_MAIL_ACTIONS_H
-#define PODGOT_VK_MAIL_ACTIONS_H
+#ifndef PROJECT_INCLUDE_ACTIONS_H_
+#define PROJECT_INCLUDE_ACTIONS_H_
 
+#include "mail_parser.h"
 
 int valid_h(char *header, callback_t callback);
+int str_check(char *str, callback_t callback);
+int part_begin(char *str, callback_t callback);
+int finish(char *str, callback_t callback);
 
-int str_check(char *header, callback_t callback);
-
-int part_begin(char *header, callback_t callback);
-
-int finish(char *header, callback_t callback);
-
-#endif //PODGOT_VK_MAIL_ACTIONS_H
+#endif  // PROJECT_INCLUDE_ACTIONS_H_

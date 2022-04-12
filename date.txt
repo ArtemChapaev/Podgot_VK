@@ -1,32 +1,17 @@
 typedef bool (*action_t)(const char *s, const char **end, cjson_callback_t callback);
 
 
-
-
-// S_HMORE_VAL можно объединить с S_VAL
-
 static rule_t transitions[S_COUNT][L_COUNT] = {
-//                  L_HNAME                 L_STR                   L_SPACE_STR                 L_EMPTY_STR         L_EOF
+//                  L_HNAME                 L_STR                   L_EMPTY_STR             L_EOF
 
-/*S_BEGIN*/         {{S_HNAME, valid_h},    {S_ERR, NULL},          {S_ERR, NULL},              {S_ERR, NULL},          {S_ERR, NULL}},
-/*S_HNAME*/         {{S_ERR, NULL},         {S_HVALUE, str_check},  {S_ERR, NULL},              {S_ERR, NULL},          {S_ERR, NULL}},
-/*S_HVALUE*/        {{S_HNAME, valid_h},    {S_ERR, NULL},          {S_HMORE_VAL, str_check},   {S_HEND, part_begin},   {S_ERR, NULL }},
-/*S_HMORE_VAL*/     {{S_HNAME, valid_h},    {S_ERR, NULL},          {S_HMORE_VAL, str_check},   {S_HEND, part_begin},   {S_ERR, NULL }},
-/*S_HEND*/          {{S_PART, NULL},        {S_PART, str_check},    {S_ERR, NULL},              {S_HEND, part_begin},   {S_END, finish }},
+/*S_BEGIN*/         {{S_HNAME, valid_h}, {S_ERR, NULL},             {S_ERR,  NULL},         {S_ERR, NULL}},
+/*S_HNAME*/         {{S_ERR,  NULL},     {S_HVALUE, str_check},     {S_ERR,  NULL},         {S_ERR, NULL}},
+/*S_HVALUE*/        {{S_HNAME, valid_h}, {S_HVALUE, str_check},     {S_HEND, part_begin},   {S_ERR, NULL}},
+/*S_HEND*/          {{S_PART, NULL},     {S_PART,   str_check},     {S_HEND, part_begin},   {S_END, finish}},
 
-/*S_PART*/          {{S_PART, NULL},        {S_PART, str_check},    {S_PART, str_check},        {S_PART, NULL},         {S_END, finish }},
-/*S_END*/           {{S_ERR, NULL},         {S_ERR, NULL},          {S_ERR, NULL},              {S_ERR, NULL},          {S_ERR, NULL}}
+/*S_PART*/          {{S_PART, NULL},     {S_PART,   str_check},     {S_PART, NULL},         {S_END, finish}},
+/*S_END*/           {{S_ERR,  NULL},     {S_ERR, NULL},             {S_ERR,  NULL},         {S_ERR, NULL}}
 };
-
-//использовать возможно статическую переменную, чтобы учитывать, нужно ли использовать значение заголовка
-
-
-Для цикла
-
-
-
-
-
 
 int valid_h(char **header, callback_t callback) {
     char *correct_header = calloc(sizeof *header, sizeof(char));

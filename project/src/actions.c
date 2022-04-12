@@ -5,16 +5,18 @@
 
 #include "mail_parser.h"
 
-int valid_h(char *header, callback_t callback) {
-    char *correct_header = calloc((sizeof header) + 1, sizeof(char));
+int valid_h(char* header, callback_t callback) {
+    size_t size = strlen(header) + 1;
+    char *correct_header = malloc(size);
+    if (correct_header == NULL) {
+        return ERR_MEMORY;
+    }
     int i = 0;
 
     for (; header[i] != '\0'; ++i) {
         correct_header[i] = tolower(header[i]);
     }
-
     correct_header[i] = '\0';
-    //printf("correct header - %s\n",correct_header);
 
     if (strcmp(correct_header, FROM) == 0) {
         callback(NULL, H_FROM);
@@ -27,21 +29,22 @@ int valid_h(char *header, callback_t callback) {
     } else {
         callback(NULL, H_OTHER);
     }
+    free(correct_header);
     return 0;
 }
 
 
-int str_check(char *header, callback_t callback) { // rename, bcs part_count
-    callback(header, STR);
+int str_check(char *str, callback_t callback) {
+    callback(str, STR);
     return 0;
 }
 
-int part_begin(char *header, callback_t callback) {
-    callback(header, EMPTY_STR);
+int part_begin(char *str, callback_t callback) {
+    callback(str, BEGIN_OF_BODY);
     return 0;
 }
 
-int finish(char *header, callback_t callback) {
-    callback(header, END);
+int finish(char *str, callback_t callback) {
+    callback(str, END);
     return 0;
 }

@@ -1,39 +1,51 @@
-Subject: 2 RCPT MIME
-From: bob <bob@example.com>
-To: xxx@example.net, yyy@example.net
-Content-Type: multipart/alternative; boundary="=-omjqkVTVbwdgCWFRgIkx"
-Date: Wed, 02 Jun 2010 11:06:27 +0800
-Message-ID: <1275447987.2063.842.camel@pony>
+From mrc@CAC.Washington.EDU Mon Feb  8 02:53:47 PST 1993
+Date: Mon, 6 Feb 1993 02:53:47 -0800 (PST)
+From: Mark Crispin <mrc@CAC.Washington.EDU>
+Subject: Multi-media mail demonstration 
+To: MRC@CAC.Washington.EDU
+Mime-Version: 1.0 
+Content-Type: MULTIPART/MIXED;boundary=beer
+Message-Id: <CMM.0.88.687168092.mrc@akbar.cac.washington.edu> 
+Status: RO
+X-Status: 
+X-Keywords:
+X-UID: 1
+
+--beer
+Content-Type: TEXT/PLAIN
+Content-Description: Explanation
+
+This is a demonstration of multi-part mail with encapsulated messages.  This
+is a very complex message whose purpose it is to exercise software using the
+new multi-part message standard.
+
+--beer
+Content-Type: MESSAGE/RFC822
+Content-Description: Rich Text demo
+
+Received: from dimacs.rutgers.edu by akbar.cac.washington.edu
+Message-Id: <sdJn_nq0M2YtNKaFtO@thumper.bellcore.com>
+Date: Tue, 24 Dec 1991 08:14:27 -0500 (EST)
+From: Nathaniel Borenstein <nsb@thumper.bellcore.com>
+X-Andrew-Message-Size: 747+0
 Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3
-Received: from is-atl03.i.smailru.net (is-atl03.i.smailru.net [5.61.236.37])
-  by is-atl02.i.mail.ru (Postfix) with ESMTP id 964D810071
-  for <xxx@example.com>; Mon, 12 Mar 2018 19:18:21 +0300 (MSK)
+Content-Type: multipart/alternative; 
+	boundary="Interpart_Boundary_AdJn:mu0M2YtJKaFh9AdJn:mu0M2YtJKaFk="
+To: ietf-822@dimacs.rutgers.edu
+Subject: Re: a MIME-Version misfeature
 
+This message has been composed in the 'multipart' format for extended
+mail bodies.  If you are reading this prefix, your mail reader probably has
+not yet been modified to understand the new format, and some of what follows
+may look strange.  You may wish to look into upgrading your mail reader.
+--Interpart_Boundary_AdJn:mu0M2YtJKaFh9AdJn:mu0M2YtJKaFk=
 
---=-omjqkVTVbwdgCWFRgIkx
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+I have no problem with changing the BNF to permit the period, as Mark
+suggests.   However, I disagree violently with the following comment:
 
-Превел
+By the way, this message is being sent by an experimental version of
+Andrew I'm playing with.  I'd be interested in any comments you have on
+its formatting, etc.  -- Nathaniel
 
-123
-
---=-omjqkVTVbwdgCWFRgIkx
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
-<HTML>
-<HEAD>
-  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
-  <META NAME="GENERATOR" CONTENT="GtkHTML/3.28.3">
-</HEAD>
-<BODY>
-<B>&#1055;&#1088;&#1077;&#1074;&#1077;&#1083;</B><BR>
-<BR>
-123
-</BODY>
-</HTML>
-
---=-omjqkVTVbwdgCWFRgIkx--
+--Interpart_Boundary_AdJn:mu0M2YtJKaFh9AdJn:mu0M2YtJKaFk=--
+--beer--

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "mail_parser.h"
 #include "actions.h"
@@ -10,7 +11,6 @@ typedef int (*action_t)(char *str, callback_t callback);
 typedef enum {
     L_HNAME,
     L_STR,
-    L_SPACE_STR,
     L_EMPTY_STR,
     L_EOF,
     L_COUNT,
@@ -33,81 +33,83 @@ typedef struct {
     action_t action;
 } rule_t;
 
-static char *get_lexem(FILE *file, lexem_t *lexem);
-
+char *get_lexem(FILE *file, lexem_t *lexem);
+int buf_realloc(char **buf, int *overflow_count);
 void check_next_sym(FILE *file, char ch);
-
-void str_translate(lexem_t *lexem, int j, char *buf);
+void check_line_feed(lexem_t *lexem, int j, char *buf, bool *is_header_value, bool *is_part_file);
 
 static rule_t transitions[S_COUNT][L_COUNT] = {
-//                  L_HNAME                 L_STR                   L_SPACE_STR                 L_EMPTY_STR         L_EOF
+//                  L_HNAME                 L_STR                   L_EMPTY_STR             L_EOF
+/*S_BEGIN*/         {{S_HNAME, valid_h}, {S_ERR, NULL},             {S_ERR,  NULL},         {S_ERR, NULL}},
+/*S_HNAME*/         {{S_ERR,  NULL},     {S_HVALUE, str_check},     {S_ERR,  NULL},         {S_ERR, NULL}},
+/*S_HVALUE*/        {{S_HNAME, valid_h}, {S_HVALUE, str_check},     {S_HEND, part_begin},   {S_ERR, NULL}},
+/*S_HEND*/          {{S_PART, NULL},     {S_PART,   str_check},     {S_HEND, part_begin},   {S_END, finish}},
 
-/*S_BEGIN*/         {{S_HNAME, valid_h},    {S_ERR, NULL},          {S_ERR, NULL},              {S_ERR, NULL},          {S_ERR, NULL}},
-/*S_HNAME*/         {{S_ERR, NULL},         {S_HVALUE, str_check},  {S_ERR, NULL},              {S_ERR, NULL},          {S_ERR, NULL}},
-/*S_HVALUE*/        {{S_HNAME, valid_h},    {S_ERR, NULL},          {S_VALUE, str_check},       {S_HEND, part_begin},   {S_ERR, NULL }},
-/*S_HEND*/          {{S_PART, NULL},        {S_PART, str_check},    {S_ERR, NULL},              {S_HEND, part_begin},   {S_END, finish }},
-
-/*S_PART*/          {{S_PART, NULL},        {S_PART, str_check},    {S_PART, str_check},        {S_PART, NULL},         {S_END, finish }},
-/*S_END*/           {{S_ERR, NULL},         {S_ERR, NULL},          {S_ERR, NULL},              {S_ERR, NULL},          {S_ERR, NULL}}
+/*S_PART*/          {{S_PART, NULL},     {S_PART,   str_check},     {S_PART, NULL},         {S_END, finish}},
+/*S_END*/           {{S_ERR,  NULL},     {S_ERR, NULL},             {S_ERR,  NULL},         {S_ERR, NULL}}
 };
 
-char *mail_parser(FILE *eml_file) {
+int mail_parser(FILE *eml_file) {
     state_t state = S_BEGIN;
     lexem_t lexem;
-    char *str = get_lexem(eml_file, &lexem);
-    while (true) {
-        rule_t rule = transitions[state][lexem];
 
+    while (true) {
+        char *str = get_lexem(eml_file, &lexem);
+        if (str == NULL) {
+            return ERR_MEMORY;
+        }
+
+        rule_t rule = transitions[state][lexem];
         if (rule.state == S_ERR) {
             free(str);
-            return NULL;
+            return ERR_WRONG_LEXEM;
         }
-        //printf("lexem = %d - %s\n", lexem, str);
+
         if (rule.action != NULL) {
             int return_code = rule.action(str, callback);
             if (return_code != 0) {
                 free(str);
-                return NULL;
+                return ERR_MEMORY;
             }
         }
+
         state = rule.state;
         free(str);
         if (lexem == L_EOF) {
-            //printf("EOF\n");
             break;
-        } else {
-            str = get_lexem(eml_file, &lexem);
         }
     }
-    return NULL;
+    return 0;
 }
 
-static char *get_lexem(FILE *file, lexem_t *lexem) {
+char *get_lexem(FILE *file, lexem_t *lexem) {
     static bool is_header_value = false;
+    static bool is_part_file = false;
 
-    char *buf = malloc(BUF_SIZE);
+    char *buf = calloc(BUF_SIZE, sizeof(char));
+    if (buf == NULL) {
+        return NULL;
+    }
     int j = 0;
-    char ch;
 
+    int overflow_count = 1;
+
+    char ch;
     while ((ch = fgetc(file)) != EOF) {
         switch (ch) {
             case '\n': {
                 check_next_sym(file, '\r');
-
-                str_translate(lexem, j, buf);
-                is_header_value = false;
+                check_line_feed(lexem, j, buf, &is_header_value, &is_part_file);
                 return buf;
             }
             case '\r': {
                 check_next_sym(file, '\n');
-
-                str_translate(lexem, j, buf);
-                is_header_value = false;
+                check_line_feed(lexem, j, buf, &is_header_value, &is_part_file);
                 return buf;
             }
             case ':': {
-                if (is_header_value) { // возможно наличие ':' в строке со временем
-                    buf[j++] = ch;
+                if (is_header_value || is_part_file) {  // возможно наличие ':' в строке
+                    buf[j++] = ch;                      // с заголовком или в теле
                     break;
                 } else {
                     is_header_value = true;
@@ -116,43 +118,73 @@ static char *get_lexem(FILE *file, lexem_t *lexem) {
                     return buf;
                 }
             }
+            case '\t':
             case ' ': {
-                if (is_header_value && j == 0) { // обрабатывается пробел после имени заголовка
-                    break;
+                if (is_header_value && j == 0) {  // обрабатывается пробел после имени заголовка
                 } else if (j == 0) {
-                    *lexem = L_SPACE_STR;
+                    *lexem = L_STR;
 
-                    do {
+                    while (isspace(ch)) {
                         ch = fgetc(file);
-                    } while (isspace(ch));
+                    }
                     buf[j++] = ch;
 
                     // fgets, но без считывания перевода строки
-                    for (; ((ch = fgetc(file)) != '\n' && ch != '\r') && (j < BUF_SIZE - 1); ++j) {
+                    for (; (((ch = fgetc(file)) != EOF) && ch != '\n' && ch != '\r'); ++j) {
                         buf[j] = ch;
+                        if (j >= END_OF_STR) {
+                            if (buf_realloc(&buf, &overflow_count) != 0) {
+                                return NULL;
+                            }
+                        }
                     }
+
+                    // чтобы ничего не осталось для следующего лексического разбора
                     if (ch == '\n') {
                         check_next_sym(file, '\r');
-                    }
-                    if (ch == '\r') {
+                    } else if (ch == '\r') {
                         check_next_sym(file, '\n');
                     }
 
                     buf[j] = '\0';
                     return buf;
                 } else {
+                    if (j >= END_OF_STR) {
+                        if (buf_realloc(&buf, &overflow_count) != 0) {
+                            return NULL;
+                        }
+                    }
                     buf[j++] = ch;
-                    break;
                 }
+                break;
             }
             default: {
+                if (j >= END_OF_STR) {
+                    if (buf_realloc(&buf, &overflow_count) != 0) {
+                        return NULL;
+                    }
+                }
                 buf[j++] = ch;
             }
         }
     }
-    *lexem = L_EOF;
-    free(buf);
-    return NULL;
+    if (j != 0) {
+        *lexem = L_STR;
+    } else {
+        *lexem = L_EOF;
+    }
+    buf[j] = '\0';
+    return buf;
+}
+
+int buf_realloc(char **buf, int *overflow_count) {
+    ++(*overflow_count);
+    char *new_buf = realloc(*buf, (*overflow_count) * BUF_SIZE);
+    if (new_buf == NULL) {
+        return ERR_MEMORY;
+    }
+    *buf = new_buf;
+    return 0;
 }
 
 void check_next_sym(FILE *file, char ch) {
@@ -162,12 +194,15 @@ void check_next_sym(FILE *file, char ch) {
     }
 }
 
-void str_translate(lexem_t *lexem, int j, char *buf) {
-    if (j == 0) {
+void check_line_feed(lexem_t *lexem, int j, char *buf, bool *is_header_value, bool *is_part_file) {
+    if (j == 0 && !(*is_header_value)) {
         *lexem = L_EMPTY_STR;
+        *is_part_file = true;
     } else {
         *lexem = L_STR;
     }
+
     buf[j] = '\0';
+    *is_header_value = false;
     return;
 }

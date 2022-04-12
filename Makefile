@@ -1,8 +1,13 @@
 TARGET = ./main.out
 VALGRIND_LOG = "valgrind.log"
 
+HDRS = project/include
+
 SRCS = \
 	   project/src/main.c \
+	   project/src/mail_parser.c \
+	   project/src/actions.c \
+	   project/src/callback.c
 
 .PHONY: all check build test memtest rebuild clean
 

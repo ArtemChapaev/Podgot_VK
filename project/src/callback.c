@@ -8,15 +8,8 @@
 bool check_boundary(char *str, int i);
 int find_boundary_val(char *str, char boundary[]);
 void fill_boundary(char *str, char boundary[], int *i);
-int len_dest_str(char *str);
 
-int callback(char *str, mod_t mod) {
-    static char from_str[OUTPUT_SIZE];
-    static char to_str[OUTPUT_SIZE];
-    static char date_str[OUTPUT_SIZE];
-
-    static int p_count;
-
+int callback(char *str, mod_t mod, mod_t *output_mod) {
     static int write_str_mod = H_OTHER;
 
     switch (mod) {
@@ -25,18 +18,15 @@ int callback(char *str, mod_t mod) {
 
             switch (write_str_mod) {
                 case H_FROM: {
-                    int len = len_dest_str(from_str);
-                    strncat(from_str, str, OUTPUT_SIZE - len);
+                    *output_mod = H_FROM;
                     break;
                 }
                 case H_TO: {
-                    int len = len_dest_str(to_str);
-                    strncat(to_str, str, OUTPUT_SIZE - len);
+                    *output_mod = H_TO;
                     break;
                 }
                 case H_DATE: {
-                    int len = len_dest_str(date_str);
-                    strncat(date_str, str, OUTPUT_SIZE - len);
+                    *output_mod = H_DATE;
                     break;
                 }
                 case H_CONTENT_TYPE: {
@@ -44,45 +34,29 @@ int callback(char *str, mod_t mod) {
                     if (return_code == NO_MULTYPART) {
                         write_str_mod = H_OTHER;
                     } else if (return_code != 0) {
-                        return 1;
+                        return ERR_MEMORY;
                     }
+                    *output_mod = END;
                     break;
                 }
-                case BEGIN_OF_BODY: {
+                case BODY: {
                     if (strcmp(boundary, "\0") == 0) {
-                        p_count = 1;
+                        *output_mod = NO_MULTYPART;
                     } else if (strcmp(boundary, str) == 0) {
-                        ++p_count;
+                        *output_mod = BODY;
                     }
-                    break;
-                }
-                default: {
-                    break;
                 }
             }
-            break;
-        }
-        case END: {
-            printf("%s|%s|%s|%d\n", from_str, to_str, date_str, p_count);
             break;
         }
         default: {
-            if (write_str_mod != BEGIN_OF_BODY) {  // не учитываем заголовки внутри тела
+            if (write_str_mod != BODY) {  // не учитываем заголовки внутри тела
                 write_str_mod = mod;
             }
+            *output_mod = END;
         }
     }
     return 0;
-}
-
-int len_dest_str(char *str) {
-    int count = 0;
-    for (; str[count] != '\0'; ++count) {}
-    if (count != 0) {
-        str[count] = ' ';
-        str[count + 1] = '\0';
-    }
-    return count;
 }
 
 bool check_boundary(char *str, int i) {
